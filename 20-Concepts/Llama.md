@@ -1,3 +1,3 @@
 # Llama
 
-Meta's open-weight large language model family, widely used for research and fine-tuning.
+[[Meta]]'s open-weight [[Large Language Models|large language model]] family. The flagship of [[Open Source AI]], distributed via [[Hugging Face]] and major cloud providers.

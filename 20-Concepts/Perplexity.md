@@ -1,3 +1,3 @@
 # Perplexity
 
-AI-powered search engine that uses LLMs to deliver cited, conversational answers.
+AI-powered search engine that uses [[Large Language Models]] to deliver cited, conversational answers. A vertical application of [[Generative AI]] competing with [[Google]] Search.

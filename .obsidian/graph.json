@@ -12,12 +12,20 @@
       "color": { "a": 1, "rgb": 5419488 }
     },
     {
+      "query": "path:25-People",
+      "color": { "a": 1, "rgb": 16225590 }
+    },
+    {
       "query": "path:10-News",
       "color": { "a": 1, "rgb": 14701138 }
     },
     {
       "query": "path:30-Articles",
       "color": { "a": 1, "rgb": 9100487 }
+    },
+    {
+      "query": "path:00-Inbox",
+      "color": { "a": 1, "rgb": 16777215 }
     }
   ],
   "collapse-display": false,

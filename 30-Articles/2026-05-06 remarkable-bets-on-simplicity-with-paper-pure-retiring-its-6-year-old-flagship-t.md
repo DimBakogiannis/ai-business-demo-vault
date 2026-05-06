@@ -1,0 +1,25 @@
+<h2>Remarkable's Bold Return to Monochrome</h2>
+
+<p><strong>Remarkable has unveiled the Paper Pure, a streamlined digital notepad that doubles down on the company's original formula of black-and-white E Ink displays and distraction-free writing,</strong> marking a strategic shift after years of experimenting with color screens. The new $399 tablet will replace the company's bestselling Remarkable 2, which has been in production since 2020, signaling that the Norwegian tech firm believes simpler is better in a crowded productivity tablet market.</p>
+
+<h2>Hardware and Performance Upgrades</h2>
+
+<p>While the Paper Pure maintains the same 10.3-inch screen size and resolution as its predecessor—1,872 by 1,404 pixels at 226 PPI—the underlying hardware has received a meaningful refresh. The tablet features a dual-core processor upgrade, doubled RAM from 1GB to 2GB, and quadrupled storage from 8GB to 32GB, according to The Verge's hands-on review. More importantly, Remarkable claims the device is 50 percent more responsive than the Remarkable 2 and delivers 30 percent more battery life, with a 3,820mAh battery that the company says lasts up to three weeks with one hour of daily use.</p>
+
+<p>The tablet is also lighter—360 grams versus 404 grams—and slightly thinner at 6mm, thanks in part to a redesigned plastic rear cover that uses screws and snaps to make repairs simpler. The display itself has been upgraded to Remarkable's new third-generation Canvas E Ink screen, based on E Ink's Carta 1300 panel, which offers 20 percent more contrast and improved refresh speeds compared to the Remarkable 2's second-gen display. The lack of backlighting remains a deliberate choice; Remarkable argues this design decision enhances the pen-on-paper writing experience rather than diminish it.</p>
+
+<h2>Writing Experience Remains Core Appeal</h2>
+
+<p>In hands-on testing, The Verge found the Paper Pure delivers an exceptional writing experience that surpasses competitors. The textured E Ink screen surface mimics the tactile sensation of writing on actual paper more convincingly than tablets with smooth glass screens. The included Marker stylus, or the optional Marker Plus with a dedicated eraser button, offers the same latency as the Remarkable 2's stylus. While not quite as responsive as Apple's Pencil Pro, the overall writing experience remains unmatched among digital notepads, according to reviewers. The stylus now charges wirelessly when magnetically attached to the tablet's side, similar to iPad Pro functionality.</p>
+
+<h2>Strategic Positioning Against Color Competitors</h2>
+
+<p>The Paper Pure's launch represents a deliberate market segmentation strategy. Remarkable released color E Ink alternatives—the Paper Pro at $629 and the Paper Pro Move at $449—but is clearly betting that a significant portion of its user base values focused, distraction-free note-taking over color capabilities. By pricing the Paper Pure at $399 and offering a premium bundle with the Marker Plus stylus and Sleeve Folio case for $449, the company provides options for both budget-conscious users and those willing to pay more for enhanced features. TechCrunch notes that the company has sold over 3.5 million devices to date and now has 1.2 million subscribers for its Connect service, suggesting strong market demand has justified this strategy.</p>
+
+<h2>Software and Integration Features</h2>
+
+<p>Alongside the hardware upgrade, Remarkable is rolling out several new software capabilities available to all its tablets. The Paper Pure gains integration with Google Calendar and Microsoft Outlook, allowing users to create meeting-specific notes prefilled with agenda information from calendar invites. The tablet can now convert documents imported from Word and webpages exported from Chrome into Remarkable's native notebook format. Enhanced handwriting search, Slack integration for converting handwritten notes to typed text, and Miro collaboration tool support round out the new feature set.</p>
+
+<h2>What's Next for the Market</h2>
+
+<p>Remarkable's decision to retire the Remarkable 2 after six years signals confidence in the Paper Pure's ability to serve as a worthy successor. The company will continue providing software updates and support to existing Remarkable 2 customers, softening the blow for current users. Preorders for the Paper Pure begin today, with shipping expected to start in early June 2026. The move also raises questions about the broader digital notepad market: as E Ink technology matures and writing experiences improve, will consumers continue to chase color features, or will they embrace the company's back-to-basics philosophy? Remarkable's $3.5 million-strong installed base suggests there's substantial appetite for distraction-free, paper-like note-taking devices—particularly at a price point that undercuts color competitors by $50 to $230.</p>

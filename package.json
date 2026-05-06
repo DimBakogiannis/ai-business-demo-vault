@@ -1,0 +1,13 @@
+{
+  "name": "ai-business-demo-vault-webhook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local webhook server that writes n8n-generated markdown into the Obsidian vault.",
+  "main": "webhook-server.js",
+  "scripts": {
+    "start": "node webhook-server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

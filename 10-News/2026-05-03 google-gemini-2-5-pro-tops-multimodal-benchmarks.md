@@ -16,7 +16,7 @@ tags: [tech-news, ai, llm, google, gemini, multimodal]
 ## Summary
 Gemini 2.5 Pro is [[Google DeepMind]]'s first fully integrated [[Multimodal AI]] model trained jointly on text, image, audio, and video tokens from pretraining onward. The 4M-token context lets it ingest entire video lectures, codebases, or document collections in a single call.
 
-The model is rolling out across Google AI Studio, Vertex AI, and consumer Gemini apps over the next two weeks. Pricing roughly matches [[Anthropic]]'s [[Claude]] Opus tier.
+The model is rolling out across Google AI Studio, Vertex AI, and consumer Gemini apps over the next two weeks. Pricing roughly matches [[Anthropic]]'s [[ai-business-demo-vault/CLAUDE]] Opus tier.
 
 ## Why It Matters
 Long-context [[Multimodal AI]] unlocks workflows that previously required brittle retrieval pipelines — legal review, medical imaging triage, video editing assistants. For [[AI in Business]] teams, the cost-per-page for document-heavy tasks just dropped meaningfully.

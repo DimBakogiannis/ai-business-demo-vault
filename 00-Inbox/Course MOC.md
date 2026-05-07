@@ -17,7 +17,7 @@ A central index for the AI in Business demo vault. Use this as the starting poin
 
 ## Platforms and Products
 
-[[ChatGPT]] · [[Claude]] · [[GPT]] · [[Gemini]] · [[Llama]] · [[Hugging Face]] · [[Perplexity]]
+[[ChatGPT]] · [[ai-business-demo-vault/CLAUDE]] · [[GPT]] · [[Gemini]] · [[Llama]] · [[Hugging Face]] · [[Perplexity]]
 
 ## Foundational Concepts
 

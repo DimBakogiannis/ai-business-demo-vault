@@ -96,7 +96,3 @@ The notes in `30-Articles/` were saved with Obsidian Web Clipper during the cour
 kept here only as short excerpts with a link to the original. All rights belong to the
 original publishers (Reuters, WIRED, Ars Technica, The Verge, techblog.gr).
 
-## Built With
-
-[n8n](https://n8n.io) · [Claude](https://www.anthropic.com) ·
-[Obsidian](https://obsidian.md) · [Streamlit](https://streamlit.io) · GitHub

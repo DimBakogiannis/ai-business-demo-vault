@@ -34,6 +34,8 @@ def clean_answer(text: str) -> str:
     import re
     # Drop markdown images: a prompt-injected note could exfiltrate chat via image URLs
     text = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", text)
+    text = re.sub(r"!\[[^\]]*\]\[[^\]]*\]", "", text)  # reference-style images
+    text = re.sub(r"(?m)^\s*\[[^\]]+\]:\s*\S+.*$", "", text)  # link/image definitions
     # [[Page|Display]] -> Display
     text = re.sub(r"\[\[([^\]|]+)\|([^\]]+)\]\]", r"\2", text)
     # [[Page]] -> Page

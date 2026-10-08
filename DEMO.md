@@ -83,9 +83,44 @@ n8n Cloud blocks calls to localhost and private IPs (SSRF protection), so it can
 local folder. GitHub solves auth, persistence, sync and version history in one step. The local
 webhook server (`webhook-server.js`) is kept for self-hosted n8n setups.
 
-**Why load the whole vault into Vault Chat instead of RAG?**
-The vault is ~100 short notes, which fits comfortably in Claude's context window. Prompt
-caching keeps repeat questions cheap, and there is no vector database to maintain.
+**How does Vault Chat find answers, and is it RAG?**
+Yes, in its simplest form. RAG (retrieval-augmented generation) has three steps: *retrieve*
+the relevant documents, *augment* the prompt with them, and *generate* an answer grounded in
+them. Vault Chat does all three, but its retrieval step is "take everything": it reads the
+81 notes in `10-News/`, `20-Concepts/`, `25-People/` and `00-Inbox/` (about 27,000 words, or
+roughly 36,000 tokens) and puts them all in the prompt. Claude then does the real retrieval
+itself, picking the notes that answer the question and citing them as sources.
+
+At this size, that is the better design:
+
+- **Nothing gets missed.** A search step can skip the one note that matters; here Claude sees
+  every note, so it can also answer broad questions like "what were the main themes this week?"
+- **It stays cheap.** Prompt caching stores the vault on Anthropic's side, so follow-up
+  questions read it at about a tenth of the normal input price.
+- **There is nothing to maintain.** No embeddings, no vector database, no re-indexing when a
+  new note arrives — the next question simply includes it.
+
+**What happens at 10,000 stories?**
+This approach stops working. A news note averages ~800 words (~1,100 tokens), so 10,000
+stories is about 11 million tokens — far more than any model's context window, and even
+before that limit, every question would get slower, more expensive, and less accurate as the
+relevant notes are buried in the noise. At one note a day, the vault would outgrow a
+200,000-token window in about five months.
+
+At that scale Vault Chat would need a real retrieval step in front of Claude:
+
+1. **Index** — split each note into its sections (TL;DR, Summary, Why It Matters), create an
+   embedding for each one, and store them in a vector index (for example, pgvector or Chroma)
+   next to a keyword index. New notes are indexed as the pipeline commits them.
+2. **Search** — for each question, run keyword and semantic search together, and use the
+   frontmatter (date, source, tags) to filter, e.g. "only May 2026".
+3. **Expand with the graph** — the `[[wikilinks]]` are already a knowledge graph, so the
+   matching notes can pull in their linked concept and people hubs for context.
+4. **Rerank and answer** — keep the best ~20 notes, send only those to Claude, and keep the
+   source citations as they work today.
+
+The hub notes (`20-Concepts/`, `25-People/`) would stay fully in context, since they are
+short and give Claude the map of the whole vault.
 
 **What did it cost to run?**
 - n8n Cloud Starter: ~€20/month (or self-host for free)
@@ -100,3 +135,5 @@ caching keeps repeat questions cheap, and there is no vector database to maintai
 2. **Add an AI-relevance filter** so non-AI tech news doesn't dilute the corpus.
 3. **Weekly digest** — aggregate seven daily notes into one long-form article.
 4. **Replace n8n Cloud with a scheduled GitHub Action** so the pipeline runs for free.
+5. **Add a retrieval step to Vault Chat** once the vault grows past a few hundred notes (see
+   *What happens at 10,000 stories?* above).

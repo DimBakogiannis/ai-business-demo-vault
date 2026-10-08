@@ -56,7 +56,7 @@ You also need an `ANTHROPIC_API_KEY` set (Claude Code prompts you on first run; 
 ### 3. Verify the vault context loads
 
 ```bash
-cd ai-business-demo-vault
+cd path/to/ai-business-demo-vault
 claude
 ```
 
@@ -98,7 +98,7 @@ After the main demo (DEMO.md), say:
 ### Step 1 — Switch to terminal, launch Claude Code
 
 ```bash
-cd ai-business-demo-vault
+cd path/to/ai-business-demo-vault
 claude
 ```
 

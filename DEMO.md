@@ -60,7 +60,7 @@ Run through these the night before:
 - [ ] Webhook server NOT needed — using the GitHub path. (`webhook-server.js` is in the repo for reference but not running in production.)
 - [ ] In Obsidian, the active vault is `ai-business-demo-vault` (not the parent folder).
 - [ ] `Cmd-P → Git: Pull` works without errors.
-- [ ] Run a local pull from terminal as a backup: `cd ai-business-demo-vault && git pull`.
+- [ ] Run a local pull from terminal as a backup: `cd path/to/ai-business-demo-vault && git pull`.
 - [ ] Open the n8n workflow in a browser tab and confirm credentials are valid (GitHub PAT, Anthropic, Gmail, Medium).
 - [ ] Disable Do Not Disturb / mute Slack.
 - [ ] Have one new test article cued up by triggering n8n manually 5 minutes before the demo so the Obsidian view feels "fresh" without waiting for the AI to run live.

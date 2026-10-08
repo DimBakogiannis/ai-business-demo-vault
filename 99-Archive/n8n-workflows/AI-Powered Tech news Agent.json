@@ -1,0 +1,809 @@
+{
+  "name": "AI-Powered Tech news Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "f834f701-2c1b-46d7-96f2-96e731890421",
+      "name": "Daily 8AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        928,
+        848
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+        "options": {}
+      },
+      "id": "bfc83f90-1a8b-46b8-aa9a-f827047b14a8",
+      "name": "RSS BBC Tech",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        1376,
+        464
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "https://www.theverge.com/rss/index.xml",
+        "options": {}
+      },
+      "id": "8e47a92f-5f0f-439e-8742-ebd7344740ce",
+      "name": "RSS The Verge",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        1376,
+        656
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.arstechnica.com/arstechnica/index",
+        "options": {}
+      },
+      "id": "d3357c27-0e7e-4382-b753-9f4b539cac16",
+      "name": "RSS Ars Technica",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        1376,
+        848
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/feed/",
+        "options": {}
+      },
+      "id": "92b462d0-4405-42f2-ada7-8b58d8008fb8",
+      "name": "RSS TechCrunch",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        1376,
+        1040
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "id": "8b036ad8-91d6-44af-8e3c-b7d0e20294b6",
+      "name": "Merge All Feeds",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1600,
+        800
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "filter-24h",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": "={{ $json.isoDate }}",
+              "rightValue": "={{ Date.now() - 24 * 60 * 60 * 1000 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bef3b682-c081-4578-bcc6-90054cc61d34",
+      "name": "Filter Last 24 Hours",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        2048,
+        848
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "isoDate",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b20d2be5-a8c4-4e65-8bec-6447da2a3388",
+      "name": "Sort by Date",
+      "type": "n8n-nodes-base.sort",
+      "position": [
+        2272,
+        848
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "maxItems": 10
+      },
+      "id": "264e65ed-d038-4c03-a9a2-aa2f7776fb04",
+      "name": "Limit to 15",
+      "type": "n8n-nodes-base.limit",
+      "position": [
+        2496,
+        848
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate all articles into a single text block for the AI agent\nconst articles = $input.all();\n\nlet summaryText = 'TODAY\\'S TOP NEWS ARTICLES (' + articles.length + ' articles from the last 24 hours):\\n\\n';\n\nfor (let i = 0; i < articles.length; i++) {\n  const a = articles[i].json;\n  summaryText += (i + 1) + '. ' + (a.title || 'No title') + '\\n';\n  summaryText += '   URL: ' + (a.link || '') + '\\n';\n  const snippet = (a.snippet || '').substring(0, 250);\n  if (snippet) {\n    summaryText += '   ' + snippet + '\\n';\n  }\n  summaryText += '\\n';\n}\n\nreturn [{ json: { articlesSummary: summaryText, articleCount: articles.length } }];"
+      },
+      "id": "284e8e05-5732-45ad-811c-7705ff1709d5",
+      "name": "Aggregate Articles",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2720,
+        848
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.articlesSummary }}",
+        "options": {
+          "systemMessage": "You are a professional tech news journalist. Every day you receive a digest of the latest news articles from major tech publications. Your job is to write a concise daily tech news digest covering 3-4 distinct stories.\n\n## Tools Available\n- **Fetch Article**: Pass a full article URL (including https://) to read the complete text. Use this to get the full details of the articles you want to write about.\n\n## Your Task\n1. Review the headlines and snippets provided.\n2. Pick 3-4 DIFFERENT stories that cover diverse topics (don't pick multiple articles about the same event).\n3. Use the Fetch Article tool to read the full text of your chosen articles (fetch 3-4 articles total).\n4. If a fetch fails (paywall, error), skip it and pick another story.\n5. Write an original news digest with 3-4 separate story sections.\n\n## NEWS DIGEST STRUCTURE\n\n### Main Headline\nA catchy title for the entire digest (e.g. \"Today's Top Tech: AI Breakthroughs, Space Ventures, and Privacy Battles\")\n\n### Introduction (1 paragraph)\nBrief overview of what's covered in today's digest.\n\n### Story 1: [Story Headline]\n- Lead paragraph (2-3 sentences): Core facts\n- Body (2-3 paragraphs): Key details, context, background\n- Analysis (1-2 paragraphs): What it means, industry impact\n- Sources attribution\n\n### Story 2: [Story Headline]\n- Lead paragraph (2-3 sentences): Core facts\n- Body (2-3 paragraphs): Key details, context, background\n- Analysis (1-2 paragraphs): What it means, industry impact\n- Sources attribution\n\n### Story 3: [Story Headline]\n- Lead paragraph (2-3 sentences): Core facts\n- Body (2-3 paragraphs): Key details, context, background\n- Analysis (1-2 paragraphs): What it means, industry impact\n- Sources attribution\n\n### Story 4: [Story Headline] (if applicable)\n- Lead paragraph (2-3 sentences): Core facts\n- Body (2-3 paragraphs): Key details, context, background\n- Analysis (1-2 paragraphs): What it means, industry impact\n- Sources attribution\n\n### Closing (1 paragraph)\nBrief wrap-up or forward-looking statement.\n\n## WRITING RULES\n- Neutral, professional journalistic tone\n- 1500-2000 words total (400-500 words per story)\n- All content ORIGINAL — synthesize and rewrite, never copy\n- Attribute sources naturally (e.g. \"according to Ars Technica\", \"The Verge reports\")\n- Use <h2> for story headlines, <h3> for subsections, <p>, <strong>, <em>, <ul>, <li> for formatting\n- Do NOT include <html>, <head>, or <body> tags\n- Include relevant technical details\n- Explain complex concepts clearly\n- Keep each story concise and focused\n\n## OUTPUT FORMAT\nReturn in this EXACT format:\n\nTITLE: [Your digest headline]\n\n---CONTENT---\n\n[Full digest in HTML with 3-4 story sections]"
+        }
+      },
+      "id": "461eee28-fe16-4e06-82a9-cfcb45f97d6f",
+      "name": "AI Write News Article",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        2944,
+        848
+      ],
+      "typeVersion": 3.1
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = String($input.item.json.output || '');\n\nconst contentMarker = '---CONTENT---';\n\nlet title = 'Untitled';\nlet content = raw;\n\nconst tIdx = raw.indexOf('TITLE:');\nif (tIdx !== -1) {\n  const afterTitle = raw.substring(tIdx + 'TITLE:'.length);\n  const newline = afterTitle.indexOf('\\n');\n  title = (newline === -1 ? afterTitle : afterTitle.substring(0, newline)).trim();\n}\n\nconst cIdx = raw.indexOf(contentMarker);\nif (cIdx !== -1) {\n  content = raw.substring(cIdx + contentMarker.length).trim();\n}\n\nconst slug = title\n  .toLowerCase()\n  .normalize('NFKD').replace(/[\\u0300-\\u036f]/g, '')\n  .replace(/[^a-z0-9]+/g, '-')\n  .replace(/^-+|-+$/g, '')\n  .slice(0, 80) || 'untitled';\n\nconst date = new Date().toISOString().slice(0, 10);\n\nconst emailHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <style>\n    body { font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }\n    .container { background-color: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\n    h1 { color: #1a1a1a; font-size: 28px; line-height: 1.3; margin-top: 0; margin-bottom: 20px; border-bottom: 3px solid #0066cc; padding-bottom: 15px; }\n    h2 { color: #2c3e50; font-size: 22px; margin-top: 30px; margin-bottom: 15px; border-left: 4px solid #0066cc; padding-left: 15px; }\n    h3 { color: #34495e; font-size: 18px; margin-top: 25px; margin-bottom: 12px; }\n    p { margin-bottom: 15px; color: #444; }\n    strong { color: #2c3e50; }\n    em { color: #555; }\n    ul, ol { margin-bottom: 15px; padding-left: 25px; }\n    li { margin-bottom: 8px; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; margin: -40px -40px 30px -40px; }\n    .header h1 { color: white; border: none; padding: 0; margin: 0; }\n    .meta { color: rgba(255,255,255,0.9); font-size: 14px; margin-top: 10px; }\n    .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e0e0e0; font-size: 13px; color: #777; text-align: center; }\n    a { color: #0066cc; text-decoration: none; }\n    a:hover { text-decoration: underline; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>${title}</h1>\n      <div class=\"meta\">📅 ${date} | 🤖 AI-Generated Tech News Digest</div>\n    </div>\n    ${content}\n    <div class=\"footer\">\n      <p>This article was automatically generated by your AI News Workflow</p>\n      <p>Powered by n8n + Anthropic Claude</p>\n    </div>\n  </div>\n</body>\n</html>\n`;\n\nreturn [{\n  json: { title, slug, date, content, emailHtml, raw }\n}];"
+      },
+      "id": "c8f9db97-37c9-4071-90fc-dd7052988b61",
+      "name": "Parse AI Output",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        3296,
+        848
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "name": "my_tool",
+        "jsCode": "const url = query.trim();\n\nif (!url.startsWith('http://') && !url.startsWith('https://')) {\n  return 'ERROR: Invalid URL. Must start with http:// or https://';\n}\n\ntry {\n  const html = await this.helpers.httpRequest({\n    method: 'GET',\n    url: url,\n    returnFullResponse: false,\n    timeout: 15000,\n  });\n\n  let text = String(html);\n\n  text = text\n    .replace(/<script[\\s\\S]*?<\\/script>/gi, '')\n    .replace(/<style[\\s\\S]*?<\\/style>/gi, '')\n    .replace(/<nav[\\s\\S]*?<\\/nav>/gi, '')\n    .replace(/<footer[\\s\\S]*?<\\/footer>/gi, '')\n    .replace(/<header[\\s\\S]*?<\\/header>/gi, '')\n    .replace(/<aside[\\s\\S]*?<\\/aside>/gi, '')\n    .replace(/<noscript[\\s\\S]*?<\\/noscript>/gi, '')\n    .replace(/<iframe[\\s\\S]*?<\\/iframe>/gi, '')\n    .replace(/<!--[\\s\\S]*?-->/g, '')\n    .replace(/<\\/(p|div|h[1-6]|li|tr|br|hr)[^>]*>/gi, '\\n')\n    .replace(/<br\\s*\\/?>/gi, '\\n')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&amp;/g, '&')\n    .replace(/&lt;/g, '<')\n    .replace(/&gt;/g, '>')\n    .replace(/&quot;/g, '\"')\n    .replace(/&#39;/g, \"'\")\n    .replace(/&nbsp;/g, ' ')\n    .replace(/[ \\t]+/g, ' ')\n    .replace(/\\n\\s*\\n/g, '\\n\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n\n  if (text.length > 4000) {\n    text = text.substring(0, 4000) + '\\n\\n[Content truncated]';\n  }\n\n  if (text.length < 100) {\n    return 'ERROR: Page returned no usable content (likely 404 or paywall). Skip this URL.';\n  }\n\n  return text;\n\n} catch (error) {\n  return 'ERROR: Could not fetch (' + error.message + '). Skip this URL.';\n}"
+      },
+      "id": "e4e97484-8b4c-4f18-a2ca-086b9c8b94a3",
+      "name": "Fetch Article",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "position": [
+        3088,
+        1072
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Automatically write and publish an original tech news article every morning, completely hands-free.\n\nGreat for tech bloggers, content creators, or anyone who wants a daily news column without the daily effort.\n\n### How it works\n* A schedule trigger fires daily at 8 AM and pulls articles from four RSS feeds (BBC Tech, The Verge, Ars Technica, TechCrunch) plus NewsAPI.\n* Articles are merged, normalized, filtered to the last 24 hours, sorted, and capped at 10.\n* An Anthropic Claude-powered AI agent picks the most newsworthy story, fetches full article text, and writes an original 600–1000 word article.\n* The output is parsed into a title and HTML body, then sent via email, posted as a draft to Medium, and saved to your Obsidian vault.\n\n### How to use\n* Add your Anthropic API key under Credentials.\n* Add your NewsAPI key (httpQueryAuth credential).\n* Add your Gmail OAuth2 credentials and set your email address.\n* Add your Medium OAuth2 credentials.\n* Configure Obsidian Local REST API plugin and update the vault URL.\n* Optionally swap RSS feeds, adjust the article limit, or change the post status.\n* Activate the workflow — it runs daily at 8 AM.\n\n### Requirements\n* Anthropic account and API key\n* NewsAPI account and API key\n* Gmail account\n* Medium account\n* Obsidian with Local REST API plugin\n\nHappy Hacking!",
+        "height": 1080,
+        "width": 460,
+        "color": 4
+      },
+      "id": "821c7d62-0b05-4cdf-a4f0-de348587ee73",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 1. Fetch news sources\nPulls the latest articles from BBC Tech, The Verge, Ars Technica, TechCrunch, and NewsAPI in parallel, triggered daily at 8 AM.",
+        "height": 888,
+        "width": 520,
+        "color": 7
+      },
+      "id": "33977415-444f-4fb3-9339-af57c025f1c0",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        944,
+        512
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 2. Normalize and filter\nStandardizes fields across RSS feeds and NewsAPI, drops articles older than 24 hours, sorts by date, and caps the list at 10 items.",
+        "height": 728,
+        "width": 960,
+        "color": 7
+      },
+      "id": "aacd3d36-a16d-4ce5-96b4-16a9e4d4ab31",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1728,
+        288
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 3. AI writes the article\nCompiles headlines into a digest, then an Anthropic Claude agent picks the top story, fetches full text, and writes an original news article.",
+        "height": 696,
+        "width": 600,
+        "color": 7
+      },
+      "id": "8ccbcb33-5a7c-494c-928e-8b151ab19e47",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2656,
+        528
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 4. Distribute the article\nExtracts the headline and HTML body from the AI output, then sends via email, creates a Medium draft post, and saves to Obsidian vault.",
+        "height": 712,
+        "width": 872,
+        "color": 7
+      },
+      "id": "141477fb-df58-4b64-804c-116c2360fef4",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3360,
+        496
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/top-headlines",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "country",
+              "value": "us"
+            },
+            {
+              "name": "category",
+              "value": "technology"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ad23de1b-b5cf-4f1a-8540-de3ce45b1c9c",
+      "name": "Fetch NewsAPI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1152,
+        1232
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "aT6U4iq8hEDi1F9j",
+          "name": "Custom Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "oKjdmherM32wM6k1",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const articles = $input.item.json.articles || [];\nreturn articles.map(a => ({\n  json: {\n    title: a.title || \"\",\n    snippet: a.description || \"\",\n    link: a.url || \"\",\n    isoDate: new Date(a.publishedAt || 0).getTime(),\n    source: (a.source && a.source.name) || \"\"\n  }\n}));"
+      },
+      "id": "96ecab0d-046d-48a3-a328-c3f29224e975",
+      "name": "Normalize NewsAPI",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1376,
+        1232
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-title",
+              "name": "title",
+              "type": "string",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "id": "field-content",
+              "name": "snippet",
+              "type": "string",
+              "value": "={{ $json.contentSnippet || $json.content || '' }}"
+            },
+            {
+              "id": "field-link",
+              "name": "link",
+              "type": "string",
+              "value": "={{ $json.link }}"
+            },
+            {
+              "id": "field-date",
+              "name": "isoDate",
+              "type": "number",
+              "value": "={{ new Date($json.isoDate || $json.pubDate || 0).getTime() }}"
+            },
+            {
+              "id": "field-source",
+              "name": "source",
+              "type": "string",
+              "value": "={{ $json.creator || $json['dc:creator'] || '' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "15d6044b-face-4395-855a-ee18d01f5e36",
+      "name": "Normalize RSS Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1824,
+        848
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-haiku-4-5-20251001",
+          "mode": "list",
+          "cachedResultName": "Claude Haiku 4.5"
+        },
+        "options": {}
+      },
+      "id": "88400dd8-93a1-4ba9-8ca8-52579f4c45a6",
+      "name": "Anthropic Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        2960,
+        1072
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": "ualYThRdGbtO0SEo",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "you@example.com",
+        "subject": "={{ \"📰 Daily Tech News: \" + $json.title }}",
+        "message": "={{ $json.emailHtml }}",
+        "options": {}
+      },
+      "id": "94cfe1ea-f3b2-4532-bd5e-9473bf4965a8",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3520,
+        656
+      ],
+      "webhookId": "a8d401d3-005b-48b5-b953-268e6fbbd843",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yOughXY6rGdZCgDD",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "title": "={{ $json.title }}",
+        "contentFormat": "html",
+        "content": "={{ $json.content }}",
+        "additionalFields": {
+          "publishStatus": "draft"
+        }
+      },
+      "id": "a53d864d-6f67-4440-897c-1a8a0de08794",
+      "name": "Create Medium Post",
+      "type": "n8n-nodes-base.medium",
+      "typeVersion": 1,
+      "position": [
+        3520,
+        848
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://127.0.0.1:27124/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "text/markdown"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"title\": $(\"Format Obsidian Markdown\").item.json.title, \"slug\": $(\"Format Obsidian Markdown\").item.json.slug, \"date\": $(\"Format Obsidian Markdown\").item.json.date, \"content\": $(\"Format Obsidian Markdown\").item.json.obsidianContent } }}",
+        "options": {}
+      },
+      "id": "392d0d4b-2187-4fae-bbd4-a2bb5a33f0ec",
+      "name": "Save to Obsidian",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3968,
+        1040
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "oKjdmherM32wM6k1",
+          "name": "Header Auth account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "DimBakogiannis",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ai-business-demo-vault",
+          "mode": "name"
+        },
+        "filePath": "=10-News/{{ $json.date }} {{ $json.slug }}.md",
+        "fileContent": "={{ $json.obsidianContent }}",
+        "commitMessage": "=Add news: {{ $json.title }} ",
+        "additionalParameters": {
+          "branch": {
+            "branch": "main"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        3744,
+        1040
+      ],
+      "id": "3527f799-bd6f-4bf5-99a9-7720c7c181aa",
+      "name": "Create a file",
+      "webhookId": "de740fdb-4a39-4149-8183-10bd041366a9",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "PMeRXfeV2lFzLlmk",
+          "name": "GitHub OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.item.json;\nconst now = new Date();\n\nconst htmlToMarkdown = (html) => {\n  return html\n    .replace(/<h1[^>]*>(.*?)<\\/h1>/gi, '# $1\\n')\n    .replace(/<h2[^>]*>(.*?)<\\/h2>/gi, '## $1\\n')\n    .replace(/<h3[^>]*>(.*?)<\\/h3>/gi, '### $1\\n')\n    .replace(/<strong[^>]*>(.*?)<\\/strong>/gi, '**$1**')\n    .replace(/<em[^>]*>(.*?)<\\/em>/gi, '*$1*')\n    .replace(/<p[^>]*>(.*?)<\\/p>/gi, '$1\\n\\n')\n    .replace(/<br\\s*\\/?>/gi, '\\n')\n    .replace(/<ul[^>]*>/gi, '\\n')\n    .replace(/<\\/ul>/gi, '\\n')\n    .replace(/<li[^>]*>(.*?)<\\/li>/gi, '- $1\\n')\n    .replace(/<a[^>]*href=[\"\\'](.*?)[\"\\'][^>]*>(.*?)<\\/a>/gi, '[$2]($1)')\n    .replace(/<[^>]+>/g, '')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n};\n\nconst markdown = htmlToMarkdown(data.content);\n\nconst frontmatter = `---\ntitle: \"${data.title}\"\ndate: ${data.date}\ncreated: ${now.toISOString()}\ntype: article\nsource: AI-Generated\ncategory: tech-news\ntags:\n  - tech-news\n  - ai-generated\n  - daily-digest\n  - technology\nauthor: AI News Agent\nstatus: published\n---\n\n`;\n\nconst obsidianContent = frontmatter + markdown;\n\nreturn [{\n  json: {\n    title: data.title,\n    slug: data.slug,\n    date: data.date,\n    content: data.content,\n    obsidianContent: obsidianContent,\n    emailHtml: data.emailHtml,\n    raw: data.raw\n  }\n}];"
+      },
+      "id": "8c06a6e8-3352-47db-a270-7b86c3b207b2",
+      "name": "Format Obsidian Markdown",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        1040
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Limit to 15": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS BBC Tech": {
+      "main": [
+        [
+          {
+            "node": "Merge All Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort by Date": {
+      "main": [
+        [
+          {
+            "node": "Limit to 15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Article": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Write News Article",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS The Verge": {
+      "main": [
+        [
+          {
+            "node": "Merge All Feeds",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "RSS TechCrunch": {
+      "main": [
+        [
+          {
+            "node": "Merge All Feeds",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge All Feeds": {
+      "main": [
+        [
+          {
+            "node": "Normalize RSS Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Output": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Medium Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Obsidian Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Ars Technica": {
+      "main": [
+        [
+          {
+            "node": "Merge All Feeds",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Daily 8AM Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS BBC Tech",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS The Verge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Ars Technica",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS TechCrunch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch NewsAPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Articles": {
+      "main": [
+        [
+          {
+            "node": "AI Write News Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Last 24 Hours": {
+      "main": [
+        [
+          {
+            "node": "Sort by Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Write News Article": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch NewsAPI": {
+      "main": [
+        [
+          {
+            "node": "Normalize NewsAPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize RSS Fields": {
+      "main": [
+        [
+          {
+            "node": "Filter Last 24 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Write News Article",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize NewsAPI": {
+      "main": [
+        [
+          {
+            "node": "Merge All Feeds",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Save to Obsidian",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Obsidian Markdown": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "4f5f84a3-7a83-4d92-bc80-151660c8497c",
+  "meta": {
+    "templateId": "13924",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f1d552d5b28ae24003a935d735df146e2e9ba5094033f3deb52f4703d2034315"
+  },
+  "id": "oZVlgA4tPcNIVk8S",
+  "tags": []
+}

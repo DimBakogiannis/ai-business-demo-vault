@@ -32,6 +32,8 @@ def svg_html(path: Path, width: int = 70) -> str:
 
 def clean_answer(text: str) -> str:
     import re
+    # Drop markdown images: a prompt-injected note could exfiltrate chat via image URLs
+    text = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", text)
     # [[Page|Display]] -> Display
     text = re.sub(r"\[\[([^\]|]+)\|([^\]]+)\]\]", r"\2", text)
     # [[Page]] -> Page

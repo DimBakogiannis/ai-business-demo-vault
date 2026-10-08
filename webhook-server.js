@@ -108,7 +108,7 @@ app.get('/health', (_req, res) => {
   res.json({ ok: true, vault: VAULT_PATH });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '127.0.0.1', () => {
   console.log(`Webhook server listening on http://localhost:${PORT}`);
   console.log(`VAULT_PATH = ${VAULT_PATH}`);
   console.log(`Routes: POST /news -> ${NEWS_DIR}`);

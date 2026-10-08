@@ -1,6 +1,6 @@
 # Vault Context for Claude Code
 
-This is an Obsidian vault used for an **AI in Business** course demo. It's populated automatically by an n8n workflow that runs daily — fetches tech news, has Claude write a summary, commits to GitHub. Obsidian pulls from GitHub.
+This is an Obsidian vault built for an **AI in Business** course demo. It was populated by an n8n workflow (May 2026) that fetched tech news, had Claude write a summary, and committed it to GitHub; Obsidian pulled from GitHub. The pipeline is no longer running — the vault is a snapshot.
 
 ## Folder structure
 
@@ -8,10 +8,10 @@ This is an Obsidian vault used for an **AI in Business** course demo. It's popul
 - **10-News/** — one markdown note per news article. YAML frontmatter (date, source, title, tags), then sections: TL;DR, Key Concepts, Summary, Why It Matters, Entities. Concepts and entities use `[[wikilinks]]` to `20-Concepts/` and `25-People/` notes.
 - **20-Concepts/** — short concept hub stubs: companies, models/products, themes, domains. Each is 1–2 sentences with cross-links.
 - **25-People/** — short person stubs: CEOs and lead researchers. Each is 1–2 sentences linking to their company and themes.
-- **30-Articles/** — Medium-ready aggregated drafts written by n8n's AI Agent (longer-form, less wikilink-rich than 10-News).
+- **30-Articles/** — web clippings: short excerpts saved with Obsidian Web Clipper, each linking to the original article and to related concept notes.
 - **99-Archive/n8n-workflows/** — exported `.json` workflow definitions.
-- **`DEMO.md`** — main demo script.
-- **`DEMO-VOICE.md`** — voice-driven Q&A demo extension.
+- **`DEMO.md`** — demo walkthrough.
+- **`vault_chat.py`** — Streamlit chat app over the vault.
 - **`webhook-server.js`** — alternative local webhook (not used in production; GitHub middleware replaced it).
 
 ## How to answer questions about the vault
@@ -22,7 +22,7 @@ When the user asks about news, trends, people, or relationships:
 2. **Read selectively.** News notes have a structured format — read the TL;DR and Why It Matters sections first; only read full Summary if you need detail.
 3. **Cite sources.** Always end answers with the markdown filenames you drew from, formatted as a list. The user will use these to navigate the graph.
 4. **Prefer recency.** News filenames start with `YYYY-MM-DD`. When relevance is similar, prefer newer.
-5. **Mind the difference between 10-News and 30-Articles.** `10-News/` has clean structured data (best for Q&A). `30-Articles/` has aggregated Medium drafts (sometimes lower-quality output from the live n8n flow — treat as supplementary).
+5. **Mind the difference between 10-News and 30-Articles.** `10-News/` has clean structured data (best for Q&A). `30-Articles/` only has short excerpts of third-party articles — cite the source link, don't treat them as full coverage.
 
 ## Format for answers
 

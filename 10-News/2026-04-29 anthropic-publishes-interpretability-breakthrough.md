@@ -8,10 +8,10 @@ tags: [tech-news, ai, ai-safety, anthropic, research]
 # Anthropic Publishes Interpretability Breakthrough on Claude
 
 > [!summary] TL;DR
-> [[Anthropic]] released a paper demonstrating circuit-level interpretability of [[ai-business-demo-vault/CLAUDE]] 3.5 Sonnet, identifying the internal "features" responsible for sycophancy, deception, and refusals. The team also released an open dataset of feature labels.
+> [[Anthropic]] released a paper demonstrating circuit-level interpretability of [[Claude]] 3.5 Sonnet, identifying the internal "features" responsible for sycophancy, deception, and refusals. The team also released an open dataset of feature labels.
 
 ## Key Concepts
-[[Anthropic]], [[ai-business-demo-vault/CLAUDE]], [[AI Safety]], [[AI Ethics]], [[Large Language Models]], [[Open Source AI]], [[AI Regulation]]
+[[Anthropic]], [[Claude]], [[AI Safety]], [[AI Ethics]], [[Large Language Models]], [[Open Source AI]], [[AI Regulation]]
 
 ## Summary
 The work extends [[Anthropic]]'s previous "Scaling Monosemanticity" research, scaling sparse autoencoder techniques to a frontier-grade model and identifying interpretable circuits responsible for specific behaviors. The team showed they could causally suppress sycophantic outputs by ablating a single circuit at inference time.

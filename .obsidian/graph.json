@@ -1,51 +1,58 @@
 {
-  "collapse-filter": false,
+  "collapse-filter": true,
   "search": "",
-  "showTags": true,
+  "showTags": false,
   "showAttachments": false,
-  "hideUnresolved": false,
-  "showOrphans": true,
-  "collapse-color-groups": false,
+  "hideUnresolved": true,
+  "showOrphans": false,
+  "collapse-color-groups": true,
   "colorGroups": [
     {
       "query": "path:20-Concepts",
-      "color": { "a": 1, "rgb": 5419488 }
+      "color": {
+        "a": 1,
+        "rgb": 5419488
+      }
     },
     {
       "query": "path:25-People",
-      "color": { "a": 1, "rgb": 16225590 }
+      "color": {
+        "a": 1,
+        "rgb": 16225590
+      }
     },
     {
       "query": "path:10-News",
-      "color": { "a": 1, "rgb": 14701138 }
+      "color": {
+        "a": 1,
+        "rgb": 14701138
+      }
     },
     {
       "query": "path:30-Articles",
-      "color": { "a": 1, "rgb": 9100487 }
+      "color": {
+        "a": 1,
+        "rgb": 9100487
+      }
     },
     {
       "query": "path:00-Inbox",
-      "color": { "a": 1, "rgb": 16777215 }
+      "color": {
+        "a": 1,
+        "rgb": 16777215
+      }
     }
   ],
-  "collapse-display": false,
+  "collapse-display": true,
   "showArrow": false,
-  "textFadeMultiplier": 0,
-  "nodeSizeMultiplier": 1.6,
-  "lineSizeMultiplier": 1,
-  "collapse-forces": false,
-  "centerStrength": 0.5,
-  "repelStrength": 12,
+  "textFadeMultiplier": -1.2,
+  "nodeSizeMultiplier": 1.4,
+  "lineSizeMultiplier": 0.7,
+  "collapse-forces": true,
+  "centerStrength": 0.55,
+  "repelStrength": 14,
   "linkStrength": 1,
-  "linkDistance": 250,
-  "scale": 1,
-  "close": true,
-  "nodeSizeBasedOnConnections": true,
-  "localGraph": {
-    "depth": 2,
-    "showTags": true,
-    "showAttachments": false,
-    "hideUnresolved": false,
-    "showOrphans": false
-  }
+  "linkDistance": 140,
+  "scale": 1.168436543412854,
+  "close": true
 }

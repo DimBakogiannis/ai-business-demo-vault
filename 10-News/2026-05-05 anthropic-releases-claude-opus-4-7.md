@@ -8,10 +8,10 @@ tags: [tech-news, ai, llm, anthropic, claude, reasoning]
 # Anthropic Releases Claude Opus 4.7 With Extended Reasoning
 
 > [!summary] TL;DR
-> [[Anthropic]] shipped [[ai-business-demo-vault/CLAUDE]] Opus 4.7, a top-tier [[Reasoning Models|reasoning model]] with a configurable thinking budget and significantly improved [[Code Generation]] performance. Available immediately on the Anthropic API, Amazon Bedrock, and Google Vertex AI.
+> [[Anthropic]] shipped [[Claude]] Opus 4.7, a top-tier [[Reasoning Models|reasoning model]] with a configurable thinking budget and significantly improved [[Code Generation]] performance. Available immediately on the Anthropic API, Amazon Bedrock, and Google Vertex AI.
 
 ## Key Concepts
-[[Anthropic]], [[ai-business-demo-vault/CLAUDE]], [[Large Language Models]], [[Reasoning Models]], [[AI Safety]], [[Code Generation]], [[Amazon]], [[Google]]
+[[Anthropic]], [[Claude]], [[Large Language Models]], [[Reasoning Models]], [[AI Safety]], [[Code Generation]], [[Amazon]], [[Google]]
 
 ## Summary
 Opus 4.7 introduces a "thinking budget" parameter that lets developers cap reasoning tokens per request, addressing one of the main cost concerns with reasoning-heavy [[Large Language Models]]. [[Anthropic]] reports a 14-point jump on SWE-Bench Verified compared to Opus 4.6 and a notable reduction in sycophantic behavior — a focus area for the [[AI Safety]] team.

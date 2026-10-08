@@ -14,7 +14,7 @@ tags: [tech-news, ai, llm, xai, grok]
 [[xAI]], [[Large Language Models]], [[AI Agents]], [[Agentic AI]], [[Reasoning Models]], [[OpenAI]], [[Anthropic]]
 
 ## Summary
-Grok 3 introduces "DeepSearch" — an [[Agentic AI]] mode that performs multi-step web research with citations, similar to [[Perplexity]] and OpenAI's Deep Research. Benchmarks position the model competitively with [[GPT]]-4o and [[ai-business-demo-vault/CLAUDE]] Opus 4.6 on reasoning, while lagging frontier on math.
+Grok 3 introduces "DeepSearch" — an [[Agentic AI]] mode that performs multi-step web research with citations, similar to [[Perplexity]] and OpenAI's Deep Research. Benchmarks position the model competitively with [[GPT]]-4o and [[Claude]] Opus 4.6 on reasoning, while lagging frontier on math.
 
 The model is trained on the Colossus supercluster, which xAI claims is now the world's largest contiguous GPU deployment.
 
